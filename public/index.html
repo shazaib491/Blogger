@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.css'
+        integrity='sha512-h1rwF0uB6r2IuEZcyjPrR53bBKN9Wb4yL+w3Rdlzmc3CkBF1gMSFvQIIstnu4bEtYDaKca5ke5S8UBAACRImyg=='
+        crossorigin='anonymous' />
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center text-success">Blogger</h1>
+        <div class="row mt-5">
+            <div class="col-md-12 m-auto d-flex justify-content-center">
+                <input type="text" id="search" class="form-control rounded-0 w-25 " oninput="search(event)"
+                    placeholder="Search ">
+            </div>
+            <div class="col-md-6 mt-5">
+                <table class="table table-bordered ">
+                    <thead>
+                        <tr>
+                            <td>Title</td>
+                            <td>Body</td>
+                        </tr>
+                    </thead>
+                    <tbody id="displayRecord">
+                        <!-- <tr>
+                            <td>First</td>
+                            <td>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil, pariatur beatae saepe
+                                aut facere repudiandae reiciendis vel officiis voluptates iusto molestiae nostrum quidem
+                                reprehenderit vero quaerat ab eaque voluptas deserunt.</td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6 mt-5">
+                <form onsubmit="save(event)" tabindex="-1">
+                    <div class="form-group">
+                        <label for="">Title</label>
+                        <input type="text" name="title" id="titleValidate" oninput="validateTitle(event)"  class="form-control mt-2 name" >
+                   <span class="text-danger" id="title"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Body</label>
+                        <textarea class="form-control border-top-0 shadow" name="body" oninput="validateBody(event)" cols="30"
+                            rows="10" ></textarea>
+                   <span class="text-danger" id="body"></span>
+
+                    </div>
+                    <div class="">
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../components/index.js" type="module"  ></script>
+
+</body>
+
+</html>
