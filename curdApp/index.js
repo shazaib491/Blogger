@@ -4,22 +4,15 @@ const body = document.querySelector("#body");
 const titleErr = document.querySelector("#titleErr");
 const bodyErr = document.querySelector("#bodyErr");
 const tableBody = document.querySelector("#tableBody");
-
+const search = document.querySelector("#search");
 // declare empty array
 let blogs = [];
-
+let index = undefined;
+let mode = "create";
 // saving function
-function saveBlog(event) {
-    event.preventDefault(); //blocking to refresh
-    // 
-    console.log("Submitted!", event);
-
-    console.log("Title Value is ==>", title.value)
-    console.log("Body Value is ==>", body.value)
-}
 
 
-
+// insert
 formElement.addEventListener('submit', function (event) {
     event.preventDefault();
     console.log(event);
@@ -32,19 +25,28 @@ formElement.addEventListener('submit', function (event) {
     }
     // cleat form value
     event.target.reset();
-    blogs.push(singleBlog);
+    if (mode == "create") {
+        // push
+        blogs.push(singleBlog);
+    } else {
+        // update
+        blogs[index].title = singleBlog.title
+        blogs[index].body = singleBlog.body;
+        mode = "create";
+    }
     show();
 });
 
 
-
+// show
 const show = () => {
     tableBody.innerHTML = "";
     blogs.forEach((element) => {
         tableBody.innerHTML += `<tr>
         <td>${element.title}</td>
         <td>${element.body}</td>
-        <td><button type='button' class='btn btn-danger'  onclick='filterBlogs("${element.title}")'  >Delete</button></td>
+        <td><button type='button' class='btn btn-danger'  onclick='editBlogs("${element.title}")'  >Update</button>
+        <button type='button' class='btn btn-danger'  onclick='filterBlogs("${element.title}")'  >Delete</button></td>
         </tr>`
     })
 }
@@ -57,10 +59,21 @@ tableBody.innerHTML = `
 `
 
 
+
+// edit Blog
+const editBlogs = (titleName) => {
+    console.log(title);
+    index = blogs.findIndex(element => element.title == titleName);
+    console.log(title.value);
+    title.value = blogs[index].title
+    body.value = blogs[index].body;
+    mode = "edit";
+}
+
+
 // delete Blogs
 const filterBlogs = (title) => {
     blogs = blogs.filter((element) => {
-        debugger;
         return element.title != title
         // first !=third 
         // second !=third
@@ -70,6 +83,32 @@ const filterBlogs = (title) => {
 }
 
 
+// search function 
+search.addEventListener("input", (event) => {
+    let newArr = blogs.filter(element => element.title == event.target.value)
+    console.log(newArr);
+    if (newArr.length > 0) {
+        renderElementBySearch(newArr);
+    } else {
+        show()
+    }
+
+})
+
+
+
+const renderElementBySearch = (element) => {
+    tableBody.innerHTML = "";
+
+    element.forEach((element) => {
+        tableBody.innerHTML += `<tr>
+        <td>${element.title}</td>
+        <td>${element.body}</td>
+        <td><button type='button' class='btn btn-danger'  onclick='editBlogs("${element.title}")'  >Update</button>
+        <button type='button' class='btn btn-danger'  onclick='filterBlogs("${element.title}")'  >Delete</button></td>
+        </tr>`
+    })
+}
 
 
 
@@ -82,14 +121,6 @@ title.addEventListener('focus', function (event) {
         titleErr.setAttribute("class", "text-danger");
     }
 })
-
-
-
-
-
-
-
-
 
 
 
