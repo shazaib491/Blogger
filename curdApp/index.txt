@@ -1,0 +1,14 @@
+Search => JSON Server
+
+Npm package go
+
+npm install json-server
+
+
+
+create db.json
+
+
+run server of json server
+
+json-server --watch db.json

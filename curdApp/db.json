@@ -1,0 +1,29 @@
+{
+  "blogs": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "body": "typicode"
+    },
+    {
+      "id": 2,
+      "title": "Second Post",
+      "body": "This is Second Post"
+    },
+    {
+      "title": "First Time",
+      "body": "This is First Time",
+      "id": 3
+    },
+    {
+      "title": "Second data ",
+      "body": "this is second",
+      "id": 4
+    },
+    {
+      "title": "sdfssdfsad",
+      "body": "asdsadas",
+      "id": 5
+    }
+  ]
+}
