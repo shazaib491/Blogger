@@ -9,6 +9,7 @@ const tableBody = document.querySelector("#tableBody");
 let blogs = [];
 let index = undefined;
 let mode = "create";
+let blogId;
 // saving function
 function saveBlog(event) {
     event.preventDefault(); //blocking to refresh
@@ -21,7 +22,7 @@ function saveBlog(event) {
 
 
 
-formElement.addEventListener('submit', function (event) {
+formElement.addEventListener('submit', async function (event) {
     event.preventDefault();
     console.log(event);
     console.log(event.target.title.value);
@@ -31,65 +32,46 @@ formElement.addEventListener('submit', function (event) {
         title: event.target.title.value,
         body: event.target.body.value
     }
+    event.target.reset();
     let convertBlogToJson = JSON.stringify(singleBlog);
 
-    fetch("http://localhost:3000/blogs", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: convertBlogToJson
-    }).then((response) => {
-        console.log(response);
-    }).catch(error => {
-        console.log(error);
-    })
 
     // cleat form value
-    event.target.reset();
     if (mode == "create") {
-        blogs.push(singleBlog);
+        const response = await fetch("http://localhost:3000/blogs", {
+            method: "POST", headers: { 'Content-Type': 'application/json' }, body: convertBlogToJson
+        })
+        show();
     } else {
-        blogs[index].title = singleBlog.title
-        blogs[index].body = singleBlog.body;
+        const response = await fetch(`http://localhost:3000/blogs/${blogId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: convertBlogToJson
+        })
         mode = "create";
+
+        // blogs[index].title = singleBlog.title
+        // blogs[index].body = singleBlog.body;
     }
-    show();
 });
 
 
 
-const show = () => {
-    fetch("http://localhost:3000/blogs", { method: "GET" }).then((response) => {
-        tableBody.innerHTML = "";
-        response.json().then((data) => {
-            // console.log(data)
-            data.forEach((element) => {
-                tableBody.innerHTML += `<tr>
-                <td>${element.title}</td>
-                <td>${element.body}</td>
-                <td>
-                <button type='button' class='btn btn-danger'  onclick='editBlogs("${element.title}")'>Edit</button>
-                <button type='button' class='btn btn-danger'  onclick='filterBlogs("${element.title}")'  >Delete</button>
-                </td>
-                </tr>`
-            })
-        }).catch(error => {
-            console.log(error);
-        })
-    }).catch(error => {
-        console.log(error);
+const show = async () => {
+    const response = await fetch("http://localhost:3000/blogs")
+    tableBody.innerHTML = "";
+    const data = await response.json();
+    // console.log(data)
+    data.forEach((element) => {
+        tableBody.innerHTML += `<tr>
+                    <td>${element.title}</td>
+                    <td>${element.body}</td>
+                    <td>
+                    <button type='button' class='btn btn-info'  onclick='editBlogs("${element.id}")'>Edit</button>
+                    <button type='button' class='btn btn-danger'  onclick='filterBlogs("${element.id}")'  >Delete</button>
+                    </td>
+                    </tr>`
     })
-
-    // tableBody.innerHTML = "";
-    // blogs.forEach((element) => {
-    //     tableBody.innerHTML += `<tr>
-    //     <td>${element.title}</td>
-    //     <td>${element.body}</td>
-    //     <td>
-    //     <button type='button' class='btn btn-danger'  onclick='editBlogs("${element.title}")'>Edit</button>
-    //     <button type='button' class='btn btn-danger'  onclick='filterBlogs("${element.title}")'  >Delete</button>
-    //     </td>
-    //     </tr>`
-    // })
 }
 
 show();
@@ -103,14 +85,8 @@ tableBody.innerHTML = `
 
 
 // delete Blogs
-const filterBlogs = (title) => {
-    blogs = blogs.filter((element) => {
-        debugger;
-        return element.title != title
-        // first !=third 
-        // second !=third
-        // third !=third
-    })
+const filterBlogs = async (blogId) => {
+    const response = await fetch(`http://localhost:3000/blogs/${blogId}`, { method: 'DELETE' })
     show();
 }
 
@@ -119,25 +95,26 @@ const filterBlogs = (title) => {
 
 // edit
 
-function editBlogs(titler) {
-    index = blogs.findIndex(element => element.title == titler);
-    console.log(index)
-    title.value = blogs[index].title
-    body.value = blogs[index].body;
-    mode = "edit";
-}
+async function editBlogs(id) {
+    const response = await fetch(`http://localhost:3000/blogs/${id}`)
+    const data = await response.json();
+        blogId = data.id;
+        title.value = data.title
+        body.value = data.body;
+        mode = "edit";
 
+}
 
 
 // title.addEventListener()
 
 title.addEventListener('focus', function (event) {
-    console.log();
-    if (event.target.value == "") {
-        titleErr.innerHTML = "Title is Required";
-        titleErr.setAttribute("class", "text-danger");
-    }
-})
+        console.log();
+        if (event.target.value == "") {
+            titleErr.innerHTML = "Title is Required";
+            titleErr.setAttribute("class", "text-danger");
+        }
+    })
 
 
 
@@ -151,35 +128,35 @@ title.addEventListener('focus', function (event) {
 
 
 title.addEventListener("input", function (event) {
-    // console.log(event.target.value);
-    if (event.target.value.length > 5) {
-        titleErr.setAttribute("class", "d-none");
-    } else {
-        // titleErr.innerHTML = "Title is Required"
-        titleErr.removeAttribute("class", "d-none");
-        titleErr.setAttribute("class", "text-danger");
-    }
-})
+        // console.log(event.target.value);
+        if (event.target.value.length > 5) {
+            titleErr.setAttribute("class", "d-none");
+        } else {
+            // titleErr.innerHTML = "Title is Required"
+            titleErr.removeAttribute("class", "d-none");
+            titleErr.setAttribute("class", "text-danger");
+        }
+    })
 
 
 body.addEventListener('focus', function (event) {
-    // console.log();
-    if (event.target.value == "") {
-        bodyErr.innerHTML = "Body is Required";
-        bodyErr.setAttribute("class", "text-danger");
-    }
-})
+        // console.log();
+        if (event.target.value == "") {
+            bodyErr.innerHTML = "Body is Required";
+            bodyErr.setAttribute("class", "text-danger");
+        }
+    })
 
 body.addEventListener("input", function (event) {
-    // console.log(event.target.value);
-    if (event.target.value.length > 5) {
-        bodyErr.setAttribute("class", "d-none");
-    } else {
-        // titleErr.innerHTML = "Title is Required"
-        bodyErr.removeAttribute("class", "d-none");
-        bodyErr.setAttribute("class", "text-danger");
-    }
-})
+        // console.log(event.target.value);
+        if (event.target.value.length > 5) {
+            bodyErr.setAttribute("class", "d-none");
+        } else {
+            // titleErr.innerHTML = "Title is Required"
+            bodyErr.removeAttribute("class", "d-none");
+            bodyErr.setAttribute("class", "text-danger");
+        }
+    })
 
 
 

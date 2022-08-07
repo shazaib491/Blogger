@@ -12,3 +12,23 @@ create db.json
 run server of json server
 
 json-server --watch db.json
+
+
+npm install
+
+
+
+
+
+
+
+
+
+
+
+fetch api is used to comminucate with server
+POST ============> DATA SAVE
+GET  =============> Fetch GET 
+PUT ==============>Full data update
+PATCH ==============>Particular data update
+DELETE ============>Delete Record
