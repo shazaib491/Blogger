@@ -71,20 +71,23 @@ function cube(value) {
 
 
 // promise hell 
-// getNumber(5).then((number) => {
-//     square(number).then((sqr) => {
-//         console.log(sqr)
-//         cube(sqr).then((data) => {
-//             console.log(data)
-//         }).catch(error => {
-//             console.log(error)
-//         })
-//     }).catch(error => {
-//         console.log(error)
-//     })
-// }).catch(error => {
-//     console.log(error)
-// })
+getNumber(5).then(function (number) {
+    square(number).then(function (sqr) {
+        console.log(sqr)
+        cube(sqr).then(function (data) {
+            console.log(data)
+        }).catch(error => {
+            console.log(error)
+        })
+    }).catch(error => {
+        console.log(error)
+    })
+    
+}).catch(error => {
+    console.log(error)
+})
+
+
 
 async function resolveAll() {
     try {
